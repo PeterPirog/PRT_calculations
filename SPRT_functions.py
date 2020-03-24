@@ -2,7 +2,7 @@
 from GTC import *
 
 class PRT():
-    def __init__(self,model='',numer=''):
+    def __init__(self,model=None,numer=None):
         self.model=model
         self.numer=numer
         self.R0=None
