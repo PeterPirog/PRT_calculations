@@ -8,7 +8,7 @@ import pandas as pd
 import GTC
 
 
-def lists2unc_array(value_list, unc_list=0.0, k=2, value_name='X'):
+def lists2unc_array(value_list, unc_list=0.0, k=2, array_label='X'):
     # INPUT variables:
     # for value_list are:
     #       <class 'list'>
@@ -34,12 +34,12 @@ def lists2unc_array(value_list, unc_list=0.0, k=2, value_name='X'):
 
     for i in range(n_rows):
         for j in range(n_cols):
-            val_label = value_name + str(i) + '_' + str(j)
+            label = array_label + str(i) + '_' + str(j)
             if isinstance(unc_list, int) or isinstance(unc_list, float):
                 unc_std = unc_list / k
             else:
                 unc_std = unc_list[i][j] / k
-            realnumber_list[i][j] = GTC.ureal(x=value_list[i][j], u=unc_std, label=val_label)
+            realnumber_list[i][j] = GTC.ureal(x=value_list[i][j], u=unc_std, label=label)
 
     unc_array = GTC.la.uarray(realnumber_list)
 
@@ -187,7 +187,7 @@ class PRT():
 
     def __wczytaj_dane_sondy(self):
         self.data = pd.read_excel(io=self.plik_danych, sheet_name=self.model + '_' + self.numer)
-        print(self.data)
+        #print(self.data)
 
     def metoda1(self):
         print("model to", self.model)
