@@ -7,6 +7,14 @@ import pandas as pd
 #import numpy as np
 import GTC
 
+def lists2unc_array(value_list,unc_list=None,k=2):
+    nrow=len(value_list)
+
+    print('nrow=',nrow)
+
+    return value_list
+
+
 
 def isGTC(value):
     typeGTC = type(GTC.ureal(0, 0))
