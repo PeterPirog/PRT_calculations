@@ -1,5 +1,6 @@
 import SPRT_functions as SPRT
 import GTC
+import GTCext
 import numpy as np
 
 
