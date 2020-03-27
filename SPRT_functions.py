@@ -24,8 +24,6 @@ def lists2unc_array(value_list, unc_list=0.0, k=2, array_label='X'):
     # for value_name are:
     #       <class 'string'>
 
-
-
     # find size of value_list
     n_rows = len(value_list)
     n_cols = len(value_list[0])
