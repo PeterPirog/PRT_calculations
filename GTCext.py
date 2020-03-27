@@ -63,5 +63,20 @@ def float2GTC(value):
     else:
         return GTC.ureal(value, 0)
 
+
 def pinv(uncertainty_array):
-    return uncertainty_array
+    # A+=(AtxA)^1 x At
+    A = uncertainty_array
+    At = GTC.la.transpose(A)
+    AtA=GTC.la.matmul(At,A)
+
+    print('A=\n', A)
+    print('At=\n', At)
+    print('AtA=\n', AtA)
+
+    det_AtA = GTC.la.det(AtA)
+    print('det_AtA=\n', det_AtA)
+    #inv_AtA = GTC.la.inv(AtA)
+    #print('inv_AtA=\n', inv_AtA)
+
+    return A

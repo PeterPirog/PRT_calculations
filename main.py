@@ -32,8 +32,11 @@ print('sin(unc_array)=\n',GTC.sin(unc_array)) #tutaj można zrobic ich sinus
 
 #print(SPRT.Calculate_temp_from_W(1.0794875093598515))
 
+M=GTCext.urealext([[1,2],[3,4]],0.1)
+
+
 #calculating pseudoinverse matrix
-inv_M=GTCext.pinv(unc_array)
+inv_M=GTCext.pinv(M)
 
 print('inv_M=\n',inv_M)
 
