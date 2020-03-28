@@ -51,35 +51,42 @@ def urealext(value_list, unc_list=0.0, k=2, array_label='X', df=GTC.inf):
 
 if __name__ == "__main__":
     # USING 2d -list, no uncertainties
-    print('\n Example - 2D or 1D -list, no uncertainties\n')
+    print('\n Example - 2D or 1D -list, no uncertainties')
     value_list=[[1,2,3,4],[5,6,7,8]]
     unc_array =urealext(value_list, k=2, array_label='point')
-    print('unc_array=\n', unc_array)  # tutaj jest wytworzona macierz liczb z niepewnoscią
+    print('\nvalue_list=', value_list)
+    print('\nunc_array=', unc_array)
 
-    print('\nExample - single value, no uncertainties\n')
+    print('\nExample - single value, no uncertainties')
     value_list=2
     unc_array =urealext(value_list, k=2, array_label='point')
-    print('unc_array=\n', unc_array)  # tutaj jest wytworzona macierz liczb z niepewnoscią
+    print('\nvalue_list=', value_list)
+    print('\nunc_array=', unc_array)
 
-#value_list=1
+    print('\n Example - 2D or 1D -value list, the same uncertainty for all values, k=1')
+    value_list=[[1,2,3,4],[5,6,7,8]]
+    unc_list=0.1
+    unc_array =urealext(value_list,unc_list, k=1, array_label='point')
+    print('\nvalue_list=', value_list)
+    print('\nunc_array=', unc_array)
 
-#unc_list=[[0.1,0.2,0.3,0.4],[0.01,0.02,0.03,0.04]] #osobna niepwenośc dla każdej wartości
-#unc_list=0.1  # jedna niepewnośc dla wszystkich wartości
+    print('\n Example - 2D or 1D -value list, 2D or 1D uncertainty list, k=2, points name - voltage')
+    value_list=[[1,2,3,4],[5,6,7,8]]
+    unc_list=[[0.1,0.1,0.1,0.1],[0.2,0.2,0.2,0.15]]
+    unc_array =urealext(value_list,unc_list, k=2, array_label='voltage')
+    print('\nvalue_list=', value_list)
+    print('\nunc_array=', unc_array)
 
-#value_list=np.array(value_list)
-#unc_array=GTCext.urealext(value_list,unc_list,k=2,array_label='temp')
-
-#print('value_list=\n',value_list)
-#print('unc_list=\n',unc_list)
-#print('unc_array=\n',unc_array) # tutaj jest wytworzona macierz liczb z niepewnoscią
-#print('sin(unc_array)=\n',GTC.sin(unc_array)) #tutaj można zrobic ich sinus
-
-#print(SPRT.Calculate_temp_from_W(1.0794875093598515))
-
-#M=GTCext.urealext([[1,2],[3,4]],0.1)
+    print('\n Calculating sine from uncertainty array')
+    print('\n',GTC.sin(unc_array))
 
 
-#calculating pseudoinverse matrix
-#inv_M=GTCext.pinv(M)
+    value_list=[[1,2],[5,6]]
+    unc_list=[[0.1,0.1],[0.2,0.2]]
+    unc_array=urealext(value_list,unc_list)
+    print('\n Calculating inverse matrix from uncertainty array')
+    print('\n',GTC.la.inv(unc_array))     # <<<<<-------------------  ERROR
 
-#print('inv_M=\n',inv_M)
+
+
+
