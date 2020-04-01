@@ -16,5 +16,6 @@ ut = [0.0052, 0.004, 0.0017, 0.0015]
 t = GTCext.urealext(value_list=t, unc_list=ut, k=2, array_label='t', df=GTC.inf)
 print('t=', t)
 
+#Teraz trzeba spróbować wyliczać funkcję dla tablic
 Wrt = ITS90.Calculate_Wr(GTC.ureal(1, 0.01))
 print(Wrt)

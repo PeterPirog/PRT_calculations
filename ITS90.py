@@ -8,6 +8,7 @@ import pandas as pd
 # import numpy as np
 import GTC
 
+
 def Conv_celsius2kelvin(temp_c):
     return float2GTC(temp_c) + 273.15
 
@@ -133,7 +134,7 @@ class PRT():
 
     def __wczytaj_dane_sondy(self):
         self.data = pd.read_excel(io=self.plik_danych, sheet_name=self.model + '_' + self.numer)
-        #print(self.data)
+        # print(self.data)
 
     def metoda1(self):
         print("model to", self.model)
