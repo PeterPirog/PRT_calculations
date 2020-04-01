@@ -27,8 +27,13 @@ def urealext(value_list, unc_list=0.0, k=2, array_label='X', df=GTC.inf):
         n_cols = 1
     else:
         # find size of value_list
+        try:
+            n_cols = len(value_list[0])
+        except: # if list is 1D convert to 2D
+            value_list = [value_list]
         n_rows = len(value_list)
         n_cols = len(value_list[0])
+
 
     if df == 'N':
         df = n_rows * n_cols - 1
