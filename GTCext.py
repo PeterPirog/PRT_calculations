@@ -1,7 +1,16 @@
 import GTC
 import numpy as np
 import pandas as pd
-
+def convert_value_to_2Dlist(value):
+    if isinstance(value, int) or isinstance(value, float):  # check if list is single value
+        value = [[value]]
+    else:
+        # find size of value_list
+        try:
+            len(value[0])
+        except: # if list is 1D convert to 2D
+            value = [value]
+    return value
 
 def urealext(value_list, unc_list=0.0, k=2, array_label='X', df=GTC.inf):
     # INPUT variables:
@@ -20,19 +29,11 @@ def urealext(value_list, unc_list=0.0, k=2, array_label='X', df=GTC.inf):
     #       <class 'float'>
     # for value_name are:
     #       <class 'string'>
+    value_list=convert_value_to_2Dlist(value_list)
+    unc_list2D =convert_value_to_2Dlist(unc_list)
 
-    if isinstance(value_list, int) or isinstance(value_list, float):  # check if list is single value
-        value_list = [[value_list]]
-        n_rows = 1
-        n_cols = 1
-    else:
-        # find size of value_list
-        try:
-            n_cols = len(value_list[0])
-        except: # if list is 1D convert to 2D
-            value_list = [value_list]
-        n_rows = len(value_list)
-        n_cols = len(value_list[0])
+    n_rows = len(value_list)
+    n_cols = len(value_list[0])
 
 
     if df == 'N':
@@ -46,7 +47,7 @@ def urealext(value_list, unc_list=0.0, k=2, array_label='X', df=GTC.inf):
             if isinstance(unc_list, int) or isinstance(unc_list, float):
                 unc_std = unc_list / k
             else:
-                unc_std = unc_list[i][j] / k
+                unc_std = unc_list2D[i][j] / k
             realnumber_list[i][j] = GTC.ureal(x=value_list[i][j], u=unc_std, label=label, df=df)
     unc_array = GTC.la.uarray(realnumber_list)
 
