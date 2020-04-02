@@ -9,15 +9,15 @@ import pandas as pd
 import GTC
 
 
-def Conv_celsius2kelvin(temp_c):
+def conv_celsius2kelvin(temp_c):
     return float2GTC(temp_c) + 273.15
 
 
-def Conv_kelvin2celsius(temp_k):
+def conv_kelvin2celsius(temp_k):
     return float2GTC(temp_k) - 273.15
 
 
-def Calculate_Wr(temp_C, verbose=False):
+def calculate_Wr(temp_C, verbose=False):
     # constants for temperature range -259.3467 C to 0 C
     A = [-2.13534729,  # A0
          3.18324720,  # A1
@@ -44,7 +44,7 @@ def Calculate_Wr(temp_C, verbose=False):
          -0.00046122,  # C8
          0.00045724]  # C9
     temp_C = float2GTC(temp_C)
-    temp_K = Conv_celsius2kelvin(temp_C)
+    temp_K = conv_celsius2kelvin(temp_C)
     Wr = 1
     if (temp_C.x >= -259.3467) and (temp_C.x < 0):
         for i in range(13):
@@ -68,7 +68,7 @@ def Calculate_Wr(temp_C, verbose=False):
     return Wr
 
 
-def Calculate_temp_from_W(W, verbose=False):
+def calculate_temp_from_W(W, verbose=False):
     W = float2GTC(W)
     # constants for temperature  calculation range -259.3467 C to 0 C
     B = [0.183324722,  # B0
@@ -113,7 +113,7 @@ def Calculate_temp_from_W(W, verbose=False):
             else:
                 sum = sum + D[i] * GTC.pow((W - 2.64) / 1.64, i)
         temp_k = 273.15 + D[0] + sum
-    temp_C = Conv_kelvin2celsius(temp_k)
+    temp_C = conv_kelvin2celsius(temp_k)
     if verbose:
         # print("W({})={}".format(temp_c, W))
         print("T({}, unc std:{})={}, unc std:{}".format(W.x, W.u, temp_C.x, temp_C.u))

@@ -69,6 +69,20 @@ def float2GTC(value):
     else:
         return GTC.ureal(value, 0)
 
+def calculate_func_from_UncertainArray(function_name, uncertain_array):
+    """
+    :param function_name:  name of function to calculate form ureal type argument
+    :param uncertain_array: array built from UrealArray type
+    :return: values of function calculated for each UrealArray element
+    """
+
+    n_rows = len(uncertain_array)
+    n_cols = len(uncertain_array[0])
+    output_array = [[0 for x in range(n_cols)] for x in range(n_rows)]
+    for i in range(n_rows):
+        for j in range(n_cols):
+            output_array[i][j] = function_name(uncertain_array[i][j])
+    return output_array
 
 def pinv(uncertainty_array):
     # A+=(AtxA)^1 x At
