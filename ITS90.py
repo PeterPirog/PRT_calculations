@@ -128,7 +128,7 @@ def calculate_Wr(temp_C, verbose=False):
         print("Wr({}, unc std:{})={}, unc std:{}".format(temp_C.x, temp_C.u, Wr.x, Wr.u))
     return Wr
 
-def calculate_temp_from_W_unc(W, verbose=False):
+def calculate_temp_from_Wr_unc(W, verbose=False):
     W = float2GTC(W)
     # constants for temperature  calculation range -259.3467 C to 0 C
     B = [0.183324722,  # B0
@@ -178,6 +178,67 @@ def calculate_temp_from_W_unc(W, verbose=False):
         # print("W({})={}".format(temp_c, W))
         print("T({}, unc std:{})={}, unc std:{}".format(W.x, W.u, temp_C.x, temp_C.u))
     return temp_C
+def calculate_temp_from_Wr(W):
+    # constants for temperature  calculation range -259.3467 C to 0 C
+    B = [0.183324722,  # B0
+         0.240975303,  # B1
+         0.209108771,  # B2
+         0.190439972,  # B3
+         0.142648498,  # B4
+         0.077993465,  # B5
+         0.012475611,  # B6
+         -0.032267127,  # B7
+         -0.075291522,  # B8
+         -0.056470670,  # B9
+         0.076201285,  # B10
+         0.123893204,  # B11
+         -0.029201193,  # B12
+         -0.091173542,  # B13
+         0.001317696,  # B14
+         0.026025526]  # B15
+    # constants for temperature calculation range 0 C to 961.78 C
+    D = [439.932854,  # D0
+         472.418020,  # D1
+         37.684494,  # D2
+         7.472018,  # D3
+         2.920828,  # D4
+         0.005184,  # D5
+         -0.963864,  # D6
+         -0.188732,  # D7
+         0.191203,  # D8
+         0.049025]  # D9
+    temp_k = 0
+    if W<= 1:
+        for i in range(16):
+            if i == 0:
+                sum = B[0]
+            else:
+                sum = sum + B[i] * pow((pow(W, 1 / 6) - 0.65) / 0.35, i)
+        temp_k = 273.16 * sum
+    else:
+        for i in range(10):
+            if i == 0:
+                sum = 0
+            else:
+                sum = sum + D[i] * pow((W - 2.64) / 1.64, i)
+        temp_k = 273.15 + D[0] + sum
+    temp_C = temp_k- 273.15
+    return temp_C
+def create_Wt1_array(Wt,range=7):
+    """
+    Function to create W(t)-1, array to prepare equation system for solving
+    equation system has form Ax coeff=B, function creates matrix A for proper ITS range, default range is 7, for 0C to 660 C
+    :param Wt:
+    :param range:
+    :return:
+    """
+    if range==7:
+        Wt1 = np.reshape(Wt - 1, (-1, 1))
+        Wt1_pow2=np.reshape(Wt1**2,(-1,1))
+        Wt1_pow3 = np.reshape(Wt1 ** 3, (-1, 1))
+        Wt1_array = np.hstack((Wt1, Wt1_pow2, Wt1_pow3))
+    return Wt1_array
+
 
 
 class PRT():
