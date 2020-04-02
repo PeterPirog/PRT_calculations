@@ -238,7 +238,20 @@ def create_Wt1_array(Wt,range=7):
         Wt1_pow3 = np.reshape(Wt1 ** 3, (-1, 1))
         Wt1_array = np.hstack((Wt1, Wt1_pow2, Wt1_pow3))
     return Wt1_array
-
+def create_Wt1_array_unc(Wt,range=7):
+    """
+    Function to create W(t)-1, array to prepare equation system for solving
+    equation system has form Ax coeff=B, function creates matrix A for proper ITS range, default range is 7, for 0C to 660 C
+    :param Wt:
+    :param range:
+    :return:
+    """
+    if range==7:
+        Wt1 = np.reshape(Wt - 1, (-1, 1))
+        Wt1_pow2=np.reshape(Wt1**2,(-1,1))
+        Wt1_pow3 = np.reshape(Wt1 ** 3, (-1, 1))
+        Wt1_array = np.hstack((Wt1, Wt1_pow2, Wt1_pow3))
+    return Wt1_array
 
 
 class PRT():

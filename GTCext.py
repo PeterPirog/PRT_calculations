@@ -1,6 +1,15 @@
 import GTC
 import numpy as np
 import pandas as pd
+
+def inv(a): #this function is added cause of error in original linear algebra file
+    b = np.identity(a.shape[0], a.dtype)
+    return GTC.LU.invab(a, b)
+
+def python_list_transposition(list_2D):
+    np_list=np.array(list_2D)
+    return np.transpose(np_list).tolist()
+
 def convert_value_to_2Dlist(value):
     if isinstance(value, int) or isinstance(value, float):  # check if list is single value
         value = [[value]]
