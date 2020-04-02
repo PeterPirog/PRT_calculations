@@ -7,6 +7,7 @@ import pandas as pd
 # ITS-90 functionc  calculated  according to "Guide to the realization of the ITS-90", platinum resistance termometry
 # import numpy as np
 import GTC
+import math
 
 
 def conv_celsius2kelvin(temp_c):
@@ -17,7 +18,13 @@ def conv_kelvin2celsius(temp_k):
     return float2GTC(temp_k) - 273.15
 
 
-def calculate_Wr(temp_C, verbose=False):
+def calculate_Wr_unc(temp_C, verbose=False):
+    """
+    Function calculate reference function Wr for temperature t with uncertainty as a urealtype
+    :param temp_C:
+    :param verbose:
+    :return:
+    """
     # constants for temperature range -259.3467 C to 0 C
     A = [-2.13534729,  # A0
          3.18324720,  # A1
@@ -66,9 +73,62 @@ def calculate_Wr(temp_C, verbose=False):
     if verbose:
         print("Wr({}, unc std:{})={}, unc std:{}".format(temp_C.x, temp_C.u, Wr.x, Wr.u))
     return Wr
+def calculate_Wr(temp_C, verbose=False):
+    """
+    Function calculate reference function Wr for temperature t as numpy
+    :param temp_C:
+    :param verbose:
+    :return:
+    """
+    # constants for temperature range -259.3467 C to 0 C
+    A = [-2.13534729,  # A0
+         3.18324720,  # A1
+         -1.80143597,  # A2
+         0.71727204,  # A3
+         0.50344027,  # A4
+         -0.61899395,  # A5
+         -0.05332322,  # A6
+         0.28021362,  # A7
+         0.10715224,  # A8
+         -0.29302865,  # A9
+         0.04459872,  # A10
+         0.11868632,  # A11
+         -0.05248134]  # A12
+    # constants for temperature range 0 C to 961.78 C
+    C = [2.78157254,  # C0
+         1.64650916,  # C1
+         -0.13714390,  # C2
+         -0.00649767,  # C3
+         -0.00234444,  # C4
+         0.00511868,  # C5
+         0.00187982,  # C6
+         -0.00204472,  # C7
+         -0.00046122,  # C8
+         0.00045724]  # C9
+    temp_K = temp_C+ 273.15
+    Wr = 1
+    if (temp_C >= -259.3467) and (temp_C < 0):
+        for i in range(13):
+            if i == 0:
+                sum = A[0]
+            else:
+                sum = sum + A[i] * pow((math.log(temp_K / 273.16) + 1.5) / 1.5, i)
+        Wr = GTC.exp(sum)
+    elif (temp_C>= 0) and (temp_C<= 961.78):
+        for i in range(10):
+            if i == 0:
+                sum = C[0]
+            else:
 
+                sum = sum + C[i] * pow((temp_K - 754.15) / 481, i)
+        Wr = sum
+    else:
+        print("temperature out of range")
+    if verbose:
+        print("Wr({}, unc std:{})={}, unc std:{}".format(temp_C.x, temp_C.u, Wr.x, Wr.u))
+    return Wr
 
-def calculate_temp_from_W(W, verbose=False):
+def calculate_temp_from_W_unc(W, verbose=False):
     W = float2GTC(W)
     # constants for temperature  calculation range -259.3467 C to 0 C
     B = [0.183324722,  # B0

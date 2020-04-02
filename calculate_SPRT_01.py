@@ -22,4 +22,21 @@ print(Wrt)
 print(t)
 print('Wr(t)=',Wrt)
 print('W(t)=',Wt)
-print('W(t)-Wr(t)',Wt-Wrt)
+print('W(t)-Wr(t)',Wt-Wrt,'\n')
+
+
+# A+=(AtxA)^1 x At
+import numpy as np
+A=np.array([[1,2,3],[3,4,5]])
+print('pinvA calculated=',np.linalg.pinv(A))
+
+print('A=',A)
+At = A.T
+print('At=',At)
+AtA = np.matmul(At, A)
+print('AtA=',AtA)
+invAtA=np.linalg.inv(AtA)
+print('invAtA=',invAtA)
+pinvA=np.matmul(invAtA, At)
+print('pinvA=',pinvA)
+
