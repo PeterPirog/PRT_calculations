@@ -109,3 +109,4 @@ def pinv(uncertainty_array):
     #print('inv_AtA=\n', inv_AtA)
 
     return A
+

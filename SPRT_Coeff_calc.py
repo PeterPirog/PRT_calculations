@@ -1,9 +1,6 @@
 import numpy as np
-
 import ITS90 as SPRT_1
-
 from GTC import *
-
 import matplotlib.pyplot as plt
 ########################### example data ########################
 T1=ureal(231.928,0.0015)
@@ -34,8 +31,8 @@ Y_array=WFP_array-Wr_array
 A=la.solve(M_array,Y_array)
 
 #######################Temperature calculating function in range 0,01 + 660##############
-R_range=np.arange(2.5534637,8.61904995263575,0.1)#0.0046 refers to 0,5 C; 0,1 for fast computing
-R_unc=ureal(0,0.000012)
+R_range=np.arange(2.5534637,8.61904995263575,0.0046)#0.0046 refers to 0,5 C step; 0,1 for fast computing
+R_unc=ureal(0,0.000024)
 R_range_unc=R_range+R_unc
 
 
@@ -53,7 +50,7 @@ def Temp_res_a7(res,TPW,a,b,c):
 
 T_calc=Temp_res_a7(R_range_unc,Rtpw,A[0],A[1],A[2])
 
-######### conversion from GTC uarray to list (plottable vectors)##########
+######### conversion from GTC uarray to list (plotable vectors)##########
 def matrix_float(mat):
     l = int(len(la.transpose(mat)))
     floats=la.ones((1,l))
@@ -63,11 +60,11 @@ def matrix_float(mat):
 Ut_table=(matrix_float(uncertainty(T_calc)))
 Ttable=(matrix_float(value(T_calc)))
 
-X=list(Ut_table)
+X=list(Ut_table*1000)
 Y=list(Ttable)
 
-plt.plot(Y,X,'ro')
-plt.ylabel('uncertainty K')
+plt.plot(Y,X,'bo')
+plt.ylabel('uncertainty mK')
 plt.xlabel('Temperature K')
 plt.show()
 
