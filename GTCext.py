@@ -93,20 +93,16 @@ def calculate_func_from_UncertainArray(function_name, uncertain_array):
             output_array[i][j] = function_name(uncertain_array[i][j])
     return output_array
 
-def pinv(uncertainty_array):
+def pinv(GTC_array):
     # A+=(AtxA)^1 x At
-    A = uncertainty_array
+    A=GTC_array
     At = GTC.la.transpose(A)
-    AtA=GTC.la.matmul(At,A)
+    AtA = GTC.la.matmul(At, A)
+    invAtA = inv(AtA)   #corrected version of GTC inv
+    pinvA = GTC.la.matmul(invAtA, At)
+    return pinvA
 
-    print('A=\n', A)
-    print('At=\n', At)
-    print('AtA=\n', AtA)
-
-    det_AtA = GTC.la.det(AtA)
-    print('det_AtA=\n', det_AtA)
-    #inv_AtA = GTC.la.inv(AtA)
-    #print('inv_AtA=\n', inv_AtA)
-
-    return A
-
+def psolve(A,B):
+    pinvA=pinv(A)
+    result=GTC.la.matmul(pinvA,B)
+    return result
