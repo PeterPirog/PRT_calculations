@@ -26,5 +26,18 @@ bu=la.uarray([ureal(4,0.1),ureal(-2,0.1),ureal(2.8,0.1)])
 print('Solving 3:',psolve(au,bu))
 
 
-C=urealext(value_list=[[-2,3],[-4,1],[1,1]], unc_list=0.01, k=2, array_label='X', df=GTC.inf)
+C=urealext(value_list=[[-2,3],[-4,1],[1,1]], unc_list=[[2,3],[4,1],[1,1]], k=1, array_label='X', df=GTC.inf)
 print("C=",C)
+
+R = [67.7848, 84.5387, 100.1399, 189.513, 257.2021, 337.9695]
+UR=[0.0109,0.0099,0.0098,0.0106,0.0165,0.0071]
+
+T = [-80.0078, -38.8397, 0, 231.9287, 419.5246, 660.323]
+UT=[0.027,0.025,0.025,0.029,0.048,0.022]
+
+R=urealext(value_list=R, unc_list=UR, k=2, array_label='R', df=GTC.inf)
+print("R=",R)
+T=urealext(value_list=T, unc_list=UT, k=2, array_label='T', df=GTC.inf)
+print("T=",T)
+N=len(UR)
+print("N=",N)
