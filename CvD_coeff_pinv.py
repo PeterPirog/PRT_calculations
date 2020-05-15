@@ -29,9 +29,11 @@ print('Solving 3:',psolve(au,bu))
 #C=urealext(value_list=[[-2,3],[-4,1],[1,1]], unc_list=[[2,3],[4,1],[1,1]], k=1, array_label='X', df=GTC.inf)
 #print("C=",C)
 
-R0=ureal(100,0.0)
+#R0=ureal(100.1398867,0.0098,label='R0')
 R = [67.7848, 84.5387, 100.1399, 189.513, 257.2021, 337.9695]
 UR=[0.0109,0.0099,0.0098,0.0106,0.0165,0.0071]
+
+R0=R[2]
 
 T = [-80.0078, -38.8397, 0, 231.9287, 419.5246, 660.323]
 UT=[0.027,0.025,0.025,0.029,0.048,0.022]
@@ -50,7 +52,6 @@ N=len(UR)
 print("N=",N)
 print("type:",type(R))
 
-object_methods = hasattr(R,"method")
 
 
 print(dir(R))
@@ -72,9 +73,12 @@ print(Ts.shape)
 
 W=psolve(Ts,Rs)
 print("\nw=",W)
-A=W[0]
-B=W[1]
-C=W[2]
-print("\nA=",A)
-print("\nB=",B)
-print("\nC=",C)
+A=W[0,0]
+B=W[1,0]
+C=W[2,0]
+print("\nA=",A.x)
+print("\nB=",B.x)
+print("\nC=",C.x)
+print("\nUncertainty budget for A")
+for l,u in GTC.reporting.budget(A,reverse=True):
+    print("{0}:{1:G}".format(l,u))
