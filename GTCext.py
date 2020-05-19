@@ -1,6 +1,6 @@
 import GTC
 import numpy as np
-import pandas as pd
+
 
 def inv(a): #this function is added cause of error in original linear algebra file
     b = np.identity(a.shape[0], a.dtype)
