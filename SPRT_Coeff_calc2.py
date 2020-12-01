@@ -33,27 +33,27 @@ M_array=la.uarray([[WAr-1,(WAr-1)*log(WAr)],[WHg-1,(WHg-1)*log(WHg)]])
 Y_array=WFP_array-Wr_array
 
 A=la.solve(M_array,Y_array)
-
+print(A)
 #######################Temperature calculating function in range 0,01 + 660##############
-R_range=np.arange(2.5534637,25.558080,0.1)#0.0046 refers to 0,5 C; 0,1 for fast computing
+R_range=np.arange(5.52038,25.558080,0.3)#0.0046 refers to 0,5 C; 0,1 for fast computing
 R_unc=ureal(0,0.000012)
 R_range_unc=R_range+R_unc
 
 
-def Temp_res_a7(res,TPW,a,b,c):
+def Temp_res_a7(res,TPW,a,b):
     l = int(len(res))
     Temps=la.ones((1,l))
     for i in range(l):
         W = res[i] / TPW
-        dW = a * (W - 1) + b * pow((W - 1), 2) + c * pow((W - 1), 3)
+        dW = (a * (W - 1)) +( b * (W - 1)*log(W))
         WR = dW + W
         Temp = SPRT_1.calculate_temp_from_Wr(WR)
         Temps[0, i] = Temp
     return Temps
 
 
-T_calc=Temp_res_a7(R_range_unc,Rtpw,A[0],A[1],A[2])
-
+T_calc=Temp_res_a7(R_range_unc,Rtpw,A[0],A[1])
+print(R_range)
 ######### conversion from GTC uarray to list (plottable vectors)##########
 def matrix_float(mat):
     l = int(len(la.transpose(mat)))
