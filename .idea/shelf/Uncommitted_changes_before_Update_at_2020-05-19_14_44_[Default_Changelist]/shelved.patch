@@ -1,0 +1,18 @@
+Index: lagrange_int.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>import GTC\r\n\r\nimport GTCext\r\n\r\n\r\nX=GTCext.urealext(value_list=[1,2,3,4,5,6], unc_list=0.1, k=2, array_label='X', df=GTC.inf)\r\nY=GTCext.urealext(value_list=[2,3,7,4,2,1], unc_list=0.1, k=2, array_label='Y', df=GTC.inf)\r\n\"\"\"\r\nprint('X=',X)\r\nprint('Y=',Y)\r\n\r\nN=X.shape[1]\r\n\r\n\"\"\"\r\nfrom functools import reduce\r\n\r\ndef lagrange_productsK(X,x,k):\r\n    N = X.shape[1]\r\n    print('N=',N)\r\n    #lag_prod = [i for i in range(N)]\r\n    #lag_prod=[(x-X[0,i])/(X[0,k]-X[0,i]) for i in range(N) if k is not i else 1]\r\n    #[unicode(x.strip()) if x is not None else '' for x in row]\r\n    lag_prod = [1 if k==i else (x - X[0, i]) / (X[0, k] - X[0, i]) for i in range(N)]\r\n    print('lag_prod=', lag_prod)\r\n    #prod=[lag_prod[0] if i==0 else prod[i-1]*prod[i] for i in range(N)]\r\n    prod= reduce((lambda x, y: x * y), lag_prod)\r\n    print('prod=',prod)\r\n    return prod\r\n\"\"\"\r\nprod=lagrange_productsK(X,1.5,2)\r\nprint(prod)\r\nx=5\r\nPx_list=[Y[0,k]*lagrange_productsK(X,x,k) for k in range(N)]\r\nprint('Px_list=',Px_list)\r\n\r\nPx= reduce((lambda x, y: x + y), Px_list)\r\nprint('P(x)=',Px,' for x=',x)\r\n\"\"\"\r\ndef calculate_lagrange_val(X_array,Y_array,x):\r\n    N = X_array.shape[1]\r\n    Px_list = [Y_array[0, k] * lagrange_productsK(X_array, x, k) for k in range(N)]\r\n    Px = reduce((lambda x, y: x + y), Px_list)\r\n    return Px\r\n\r\nX=GTCext.urealext(value_list=[1,2,3,4,5,6], unc_list=0.1, k=2, array_label='X', df=GTC.inf)\r\nY=GTCext.urealext(value_list=[2,3,7,4,2,1], unc_list=0.1, k=2, array_label='Y', df=GTC.inf)\r\nx=2\r\nPx=calculate_lagrange_val(X,Y,x)\r\nprint('P(x)=',Px,' for x=',x)\r\n\r\n\r\n\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- lagrange_int.py	(revision bcd332a3894c2f47ca07f100374836d03f005f01)
++++ lagrange_int.py	(date 1589892232656)
+@@ -44,7 +44,7 @@
+ 
+ X=GTCext.urealext(value_list=[1,2,3,4,5,6], unc_list=0.1, k=2, array_label='X', df=GTC.inf)
+ Y=GTCext.urealext(value_list=[2,3,7,4,2,1], unc_list=0.1, k=2, array_label='Y', df=GTC.inf)
+-x=2
++x=2.01
+ Px=calculate_lagrange_val(X,Y,x)
+ print('P(x)=',Px,' for x=',x)
+ 
