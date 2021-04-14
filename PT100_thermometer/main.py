@@ -32,6 +32,22 @@ class HP34401():
         self.current_res = float(self.inst.query('MEASure:FRESistance?'))
         return self.current_res
 
+    def std_unc_for_R(self,R):
+        self.R_ranges=np.array([100.0,1e3,1e4,1e5,1e6,1e7,1e8,1e9])
+        self.pct_of_read = np.array([0.01,0.01,0.01,0.01,0.012,0.04,0.8,8])
+        self.pct_of_range = np.array([0.004,0.001,0.001,0.001,0.001,0.001,0.001,0.001])
+
+        #self.idx=np.where(self.R_ranges<R,0,1)
+        #print (idx)
+        if R <=100:
+            self.range=0
+        else:
+            self.range=np.argmax(self.R_ranges >R)
+        #print(self.range)
+
+        return R*0.01*self.pct_of_read[self.range]+0.01*self.pct_of_range[self.range]*self.R_ranges[self.range]
+
+
 
 class PT100():
     def __init__(self, address, coef_R0=100, coef_A=3.9083e-3, coef_B=-5.775e-7, coef_C=-4.183e-12):
@@ -40,38 +56,62 @@ class PT100():
 
         self.coef_R0 = coef_R0
         self.coef_A = coef_A
-        self.coef_B = -coef_B
+        self.coef_B = coef_B
         self.coef_C = coef_C
 
         self.current_Rt = None
         self.current_t = None
 
-    def meas_temp(self):
+    def meas_temp(self,verbose=True):
         self.current_Rt = self.multimeter.measure_4R()
+        self.current_Rt_std_unc = self.multimeter.std_unc_for_R(self.current_Rt)  #########0.13
 
-        coef = [self.coef_R0 * self.coef_C,
-                -100 * self.coef_R0 * self.coef_C,
-                self.coef_R0 * self.coef_B,
-                self.coef_R0 * self.coef_A,
-                self.coef_R0 - self.current_Rt]
 
-        coef2 = [self.coef_R0 * self.coef_B,
-                 self.coef_R0 * self.coef_A,
-                 self.coef_R0 - self.current_Rt]
+        self.current_t, self.current_t_std_unc = self.convert_R_to_t(self.current_Rt, self.current_Rt_std_unc)
+        if verbose:
+            print(f'Resistance {self.current_Rt}+/-{self.current_Rt_std_unc} ohm, temperature:{self.current_t} C, std unc:{self.current_t_std_unc} C')
 
-        if np.real(np.roots(coef2))[1] >= 0:
-            self.current_t = np.real(np.roots(coef2)[1])
-            print(f'Resistance {self.current_Rt}, {np.roots(coef2)} \n')
+        return self.current_t, self.current_t_std_unc
+
+    def __R2t__(self, R):
+        """
+        Function to convert Pt100 resistance to temperature
+        :param R: resistance
+        :return: temperature
+        """
+        coef_minus = [self.coef_R0 * self.coef_C,
+                      -100 * self.coef_R0 * self.coef_C,
+                      self.coef_R0 * self.coef_B,
+                      self.coef_R0 * self.coef_A,
+                      self.coef_R0 - R]
+
+        coef_plus = [self.coef_R0 * self.coef_B,
+                     self.coef_R0 * self.coef_A,
+                     self.coef_R0 - R]
+
+        if np.real(np.roots(coef_plus))[1] >= 0:
+            t = np.real(np.roots(coef_plus)[1])
         else:
-            self.current_t = np.real(np.roots(coef)[3])
-            print(f'Resistance {self.current_Rt}, {np.roots(coef)}\n')
+            t = np.real(np.roots(coef_minus)[3])
+        return t
 
-        print(f'Resistance {self.current_Rt} ohm, temperature:{self.current_t} C')
+    def convert_R_to_t(self, R_value, R_std_unc=0.0, N=1000):
+        Rx_list = []  # list of resistances generated for assumed standard uncertainty
+        tx_list = []  # list of temperatures generated for assumed standard uncertainty
 
-        return self.current_t
+        if R_std_unc == 0.0:
+            return self.__R2t__(R_value), 0.0
+        else:
+            mu, sigma = R_value, R_std_unc  # mean and standard deviation
+            Rx_list = np.random.normal(mu, sigma, N)
+            t_list = [self.__R2t__(Rx_list[i]) for i in range(N)]
+            return np.mean(t_list), np.std(t_list)
 
 
 if __name__ == "__main__":
     pt = PT100(address='GPIB0::21::INSTR')
 
     print(pt.meas_temp())
+    # print(pt.convert_R_to_t(120,0.1))
+    #mul=HP34401(address='GPIB0::21::INSTR')
+    #print(mul.std_unc_for_R(313.7))
