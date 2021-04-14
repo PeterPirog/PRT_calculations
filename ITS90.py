@@ -213,7 +213,7 @@ def calculate_temp_from_Wr(W):
             if i == 0:
                 sum = B[0]
             else:
-                sum = sum + B[i] * pow((pow(W, 1 / 6) - 0.65) / 0.35, i)
+                sum = sum + B[i] * pow(((pow(W, 1 / 6) - 0.65) / 0.35), i)
         temp_k = 273.16 * sum
     else:
         for i in range(10):
@@ -222,7 +222,7 @@ def calculate_temp_from_Wr(W):
             else:
                 sum = sum + D[i] * pow((W - 2.64) / 1.64, i)
         temp_k = 273.15 + D[0] + sum
-    temp_C = temp_k- 273.15
+    temp_C = temp_k - 273.15
     return temp_C
 def create_Wt1_array(Wt,range=7):
     """
